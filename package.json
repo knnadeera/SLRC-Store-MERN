@@ -1,0 +1,14 @@
+{
+  "name": "slrc",
+  "version": "1.0.0",
+  "description": "MERN SLRC Store app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "author": "K N Nadeera",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
