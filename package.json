@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "MERN SLRC Store app",
   "main": "server.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
@@ -13,8 +13,13 @@
   "author": "K N Nadeera",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongo": "^0.1.0",
+    "mongod": "^2.0.0",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.8.2"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
