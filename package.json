@@ -13,9 +13,11 @@
   "author": "K N Nadeera",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "mongo": "^0.1.0",
     "mongod": "^2.0.0",
     "mongodb": "^4.13.0",

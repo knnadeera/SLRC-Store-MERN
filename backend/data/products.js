@@ -1,6 +1,5 @@
 const products = [
   {
-    _id: "1",
     name: "T-Motor F7 HD Flight Controller",
     image: "/images/fc.jpg",
     description:
@@ -13,7 +12,6 @@ const products = [
     numReviews: 12,
   },
   {
-    _id: "2",
     name: "T-Motor VELOX V2 V2207 Motor",
     image: "/images/motor.jpg",
     description:
@@ -26,7 +24,6 @@ const products = [
     numReviews: 8,
   },
   {
-    _id: "3",
     name: "Foxeer Razer Mini 1200TVL FPV Camera",
     image: "/images/camera.jpg",
     description:
@@ -39,7 +36,6 @@ const products = [
     numReviews: 12,
   },
   {
-    _id: "4",
     name: "CNHL 1500MAH 4S 100C LIPO",
     image: "/images/lipo.jpg",
     description: "CNHL 1500MAH 4S 100C LIPO for FPV Rasing",
@@ -51,7 +47,6 @@ const products = [
     numReviews: 12,
   },
   {
-    _id: "5",
     name: "T-Motor Velox V2 V45A 4-in-1 ESC",
     image: "/images/esc.jpg",
     description:
@@ -64,7 +59,6 @@ const products = [
     numReviews: 10,
   },
   {
-    _id: "6",
     name: "Pagoda3 3B 5.8GHz FPV Antenna",
     image: "/images/antenna.jpg",
     description: "Pagoda3 3B 5.8GHz FPV Antenna for best range",
