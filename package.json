@@ -13,6 +13,7 @@
   "author": "K N Nadeera",
   "license": "MIT",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.1",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
