@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 import Message from "../components/Message";
 
 const CartScreen = ({ match, location, history }) => {
@@ -29,10 +29,12 @@ const CartScreen = ({ match, location, history }) => {
     }
   }, [dispatch, productId, qty]);
 
-  const removeFromCartHandler = (id) => {};
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
 
   const checkoutHandler = (id) => {
-    history.push('/login?redirect=shipping')
+    history.push("/login?redirect=shipping");
   };
 
   return (
@@ -76,7 +78,7 @@ const CartScreen = ({ match, location, history }) => {
                     <Button
                       type="button"
                       variant="light"
-                      onClick={removeFromCartHandler}
+                      onClick={() => removeFromCartHandler(item.product)}
                     >
                       <i className="fas fa-trash"></i>
                     </Button>
@@ -106,7 +108,9 @@ const CartScreen = ({ match, location, history }) => {
                 className="btn-black"
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
-              >Proceed To Checkout</Button>
+              >
+                Proceed To Checkout
+              </Button>
             </ListGroup.Item>
           </ListGroup>
         </Card>
