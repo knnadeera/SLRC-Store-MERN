@@ -84,41 +84,36 @@ const getUserProfile = asyncHandler(async (req, res) => {
 //@access Private
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const { email, password } = req.body;
 
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.mail;
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-    
-    if (user && (await user.matchPassword(password))) {
+  const user = await User.findOne({ email });
+
+  if (await user.matchPassword(password)) {
+    if (user ) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.mail;
+      if (req.body.newPassword) {
+        user.password = req.body.newPassword;
+      }
+
+      const updatedUser = await user.save();
+
       res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: generateToken(user._id),
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        token: generateToken(updatedUser._id),
       });
     } else {
-      res.status(401);
-      throw new Error("Invalid email or password");
+      res.status(404);
+      throw new Error("User not found");
     }
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-      token: generateToken(updatedUser._id),
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
   }
+else{
+  res.status(404);
+    throw new Error("Entered Current Password is wrong");
+}
 });
 
 export { authUser, getUserProfile, registerUser, updateUserProfile };
