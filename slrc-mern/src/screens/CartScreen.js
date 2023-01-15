@@ -23,6 +23,10 @@ const CartScreen = ({ match, location, history }) => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const totalPrice = cartItems
+    .reduce((acc, item) => acc + item.qty * item.price, 0)
+    .toFixed(2);
+
   useEffect(() => {
     if (productId) {
       dispatch(addToCart(productId, qty));
@@ -34,6 +38,7 @@ const CartScreen = ({ match, location, history }) => {
   };
 
   const checkoutHandler = (id) => {
+    localStorage.setItem('total',totalPrice)
     history.push("/login?redirect=shipping");
   };
 
@@ -97,10 +102,7 @@ const CartScreen = ({ match, location, history }) => {
                 Subtotal({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              $
-              {cartItems
-                .reduce((acc, item) => acc + item.qty * item.price, 0)
-                .toFixed(2)}
+              ${totalPrice}
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
