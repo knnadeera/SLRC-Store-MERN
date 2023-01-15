@@ -24,7 +24,7 @@ const LoginScreen = ({ location, history }) => {
     }
   }, [history, userInfo, redirect]);
 
-  const loginSubmitHandler = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
     dispatch(login(email, password));
   };
@@ -34,7 +34,7 @@ const LoginScreen = ({ location, history }) => {
       <h1>Sign In</h1>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
-      <Form onSubmit={loginSubmitHandler}>
+      <Form onSubmit={submitHandler}>
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
