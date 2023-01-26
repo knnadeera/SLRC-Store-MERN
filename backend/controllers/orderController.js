@@ -12,7 +12,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     paymentMethod,
     taxPrice,
     cartTotalPrice,
-    shippingPrice,
+    shippingCost,
     totalPrice,
   } = req.body;
 
@@ -22,13 +22,13 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     return;
   } else {
     const order = new Order({
-      user: user._id,
+      user: req.user._id,
       orderItems,
       shippingAddress,
       paymentMethod,
       taxPrice,
       cartTotalPrice,
-      shippingPrice,
+      shippingCost,
       totalPrice,
     });
 
@@ -37,5 +37,3 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     res.status(200).json(createdOrder);
   }
 });
-
-export { addOrderItems };

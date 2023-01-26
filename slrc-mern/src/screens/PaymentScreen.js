@@ -19,8 +19,6 @@ const PaymentScreen = ({ history }) => {
     history.push("/shipping");
   }
 
-  console.log(address);
-
   const dispatch = useDispatch();
 
   const submitHandler = (e) => {

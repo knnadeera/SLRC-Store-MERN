@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../actions/cartActions";
+import { createOrder } from "../actions/orderActions";
 import CheckoutSteps from "../components/CheckoutSteps";
+import Message from "../components/Message";
 
 const PlaceOrderScreen = ({ history }) => {
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
   const { cartItems, shippingAddress, paymentMethod, cartTotalPrice } = cart;
 
@@ -16,11 +21,11 @@ const PlaceOrderScreen = ({ history }) => {
     return Math.round((num * 100) / 100).toFixed(2);
   };
 
-  const shippingCost = addDecimals(cartTotalPrice > 100 ? 0 : 10);
+  const shippingCost = addDecimals(+cartTotalPrice > 100 ? 0 : 10);
 
   const taxPrice = addDecimals((+cartTotalPrice + +shippingCost) * 0.15);
 
-  const totalPrice = +cartTotalPrice + +shippingCost + +taxPrice;
+  const totalPrice = (+cartTotalPrice + +shippingCost + +taxPrice).toFixed(2);
 
   if (!user) {
     history.push("/cart");
@@ -30,7 +35,28 @@ const PlaceOrderScreen = ({ history }) => {
     history.push("/payment");
   }
 
-  const placeOrderHandler = () => {};
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+    }
+  }, [history, success]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      createOrder({
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod,
+        cartTotalPrice: cartTotalPrice,
+        shippingCost,
+        taxPrice,
+        totalPrice,
+      })
+    );
+  };
 
   return (
     <>
@@ -98,7 +124,7 @@ const PlaceOrderScreen = ({ history }) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item >
+              <ListGroup.Item>
                 <Row>
                   <Col>
                     <strong>Payment Method</strong>
@@ -107,21 +133,25 @@ const PlaceOrderScreen = ({ history }) => {
                     <strong>{paymentMethod}</strong>
                   </Col>
                 </Row>
-                {paymentMethod === "BankTransfer" ? (<Row >
-                  <Col md={12} >
-                    <h6 className='mt-4'>Bank Details:</h6>
-                    <p>
-                      <strong>
-                        Hatton National Bank
-                        <br />
-                        Weligama Branch
-                        <br />
-                        213020043319
-                        <br />K N Nadeera
-                      </strong>
-                    </p>
-                  </Col>
-                </Row>):<></>}
+                {paymentMethod === "BankTransfer" ? (
+                  <Row>
+                    <Col md={12}>
+                      <h6 className="mt-4">Bank Details:</h6>
+                      <p>
+                        <strong>
+                          Hatton National Bank
+                          <br />
+                          Weligama Branch
+                          <br />
+                          213020043319
+                          <br />K N Nadeera
+                        </strong>
+                      </p>
+                    </Col>
+                  </Row>
+                ) : (
+                  <></>
+                )}
               </ListGroup.Item>
               <ListGroup.Item>
                 <h2>Shipping Address</h2>
@@ -142,6 +172,7 @@ const PlaceOrderScreen = ({ history }) => {
               </ListGroup.Item>
             </ListGroup>
             <ListGroup.Item>
+              {error && <Message variant="danger">{error}</Message>}
               <Button
                 type="button"
                 className="btn-black"

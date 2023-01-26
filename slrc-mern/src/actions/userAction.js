@@ -13,7 +13,7 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
-} from "../constants/userConstant";
+} from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {

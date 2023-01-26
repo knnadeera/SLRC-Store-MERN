@@ -36,6 +36,7 @@ const orderSchema = mongoose.Schema(
       update_time: { type: String, require: true },
       email_address: { type: String, require: true },
     },
+    cartTotalPrice: { type: Number, require: true, default: 0.0 },
     taxPrice: { type: Number, require: true, default: 0.0 },
     shippingCost: { type: Number, require: true, default: 0.0 },
     totalPrice: { type: Number, require: true, default: 0.0 },
