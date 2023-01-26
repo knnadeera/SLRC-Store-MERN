@@ -19,14 +19,16 @@ const orderSchema = mongoose.Schema(
         },
       },
     ],
+
     shippingAddress: {
       address: { type: String, require: true },
       city: { type: String, require: true },
       state: { type: String, require: true },
       postalCode: { type: Number, require: true },
       country: { type: String, require: true },
+      telNumber: { type: Number, require: true },
     },
-    telNumber: { type: Number, require: true },
+
     paymentMethod: { type: String, require: true },
     paymentResult: {
       id: { type: String, require: true },
@@ -35,7 +37,7 @@ const orderSchema = mongoose.Schema(
       email_address: { type: String, require: true },
     },
     taxPrice: { type: Number, require: true, default: 0.0 },
-    shippingPrice: { type: Number, require: true, default: 0.0 },
+    shippingCost: { type: Number, require: true, default: 0.0 },
     totalPrice: { type: Number, require: true, default: 0.0 },
     isPaid: { type: Boolean, require: true, default: false },
     paidAt: { type: Date },
