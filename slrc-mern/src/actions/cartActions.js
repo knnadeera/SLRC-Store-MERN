@@ -4,6 +4,7 @@ import {
   CART_REMOVE_ITEM,
   CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_TOTAL_PRICE,
 } from "../constants/cartConstant";
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -21,6 +22,15 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
     },
   });
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const cartTotalPrice = (data) => (dispatch) => {
+  dispatch({
+    type: CART_TOTAL_PRICE,
+    payload: data,
+  });
+
+  localStorage.setItem("totalPrice", JSON.stringify(data));
 };
 
 export const removeFromCart = (id) => (dispatch, getState) => {

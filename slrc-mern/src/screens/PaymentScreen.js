@@ -7,16 +7,19 @@ import FormContainer from "../components/FormContainer";
 
 const PaymentScreen = ({ history }) => {
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
-  const [bankTransfer, setBankTransfer] = useState(false);
 
-  const user = useSelector((state) => state.userLogin);
-  const { userInfo } = user;
+  const user = useSelector((state) => state.userLogin.userInfo);
+  const address = useSelector((state) => state.cart.shippingAddress.address);
 
-  const totalPrice = localStorage.getItem("total");
+  const totalPrice = useSelector((state) => state.cart.cartTotalPrice);
 
-  if (!userInfo) {
+  if (!user) {
     history.push("/cart");
+  } else if (!address) {
+    history.push("/shipping");
   }
+
+  console.log(address);
 
   const dispatch = useDispatch();
 
@@ -65,7 +68,7 @@ const PaymentScreen = ({ history }) => {
               </p>
             </Form.Group>
           ) : (
-            <></>
+            <p></p>
           )}
           <h5>Total Price : ${totalPrice}/=</h5>
           <Button type="submit" variant="primary">

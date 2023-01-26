@@ -10,7 +10,11 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart, removeFromCart } from "../actions/cartActions";
+import {
+  addToCart,
+  removeFromCart,
+  cartTotalPrice,
+} from "../actions/cartActions";
 import Message from "../components/Message";
 
 const CartScreen = ({ match, location, history }) => {
@@ -22,6 +26,10 @@ const CartScreen = ({ match, location, history }) => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+
+  const addDecimals = (num) => {
+    return Math.round((num * 100) / 100).toFixed(2);
+  };
 
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.qty * item.price, 0)
@@ -38,7 +46,7 @@ const CartScreen = ({ match, location, history }) => {
   };
 
   const checkoutHandler = (id) => {
-    localStorage.setItem('total',totalPrice)
+    dispatch(cartTotalPrice(totalPrice));
     history.push("/login?redirect=shipping");
   };
 
@@ -98,11 +106,7 @@ const CartScreen = ({ match, location, history }) => {
         <Card>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h2>
-                Subtotal({cartItems.reduce((acc, item) => acc + item.qty, 0)})
-                items
-              </h2>
-              ${totalPrice}
+              <h2>Total Price ${totalPrice}</h2>
             </ListGroup.Item>
             <ListGroup.Item>
               <Button

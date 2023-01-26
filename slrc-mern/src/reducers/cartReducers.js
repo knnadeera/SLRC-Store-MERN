@@ -3,6 +3,7 @@ import {
   CART_REMOVE_ITEM,
   CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_TOTAL_PRICE,
 } from "../constants/cartConstant";
 
 export const cartReducer = (
@@ -28,6 +29,11 @@ export const cartReducer = (
           cartItems: [...state.cartItems, item],
         };
       }
+    case CART_TOTAL_PRICE:
+      return {
+        ...state,
+        cartTotalPrice: action.payload,
+      };
     case CART_REMOVE_ITEM:
       return {
         ...state,
