@@ -37,3 +37,36 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     res.status(200).json(createdOrder);
   }
 });
+
+// @desc Get order by ID
+//@rout GET /api/orders/:id
+//@access Private
+
+export const getOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email"
+  );
+
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404);
+    throw new Error("Order not fond");
+  }
+});
+
+// @desc Get user orders
+//@rout GET /api/orders
+//@access Private
+
+export const getUserOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({});
+
+  if (orders) {
+    res.json(orders);
+  } else {
+    res.status(404);
+    throw new Error("Order not fond");
+  }
+});
