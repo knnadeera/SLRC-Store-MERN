@@ -1,72 +1,38 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { createOrder } from "../actions/orderActions";
-import CheckoutSteps from "../components/CheckoutSteps";
+import { getOrderDetails } from "../actions/orderActions";
+import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const PlaceOrderScreen = ({ history }) => {
+const OrderDetailsScreen = ({ match }) => {
+  const orderId = match.params.id;
+
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems, shippingAddress, paymentMethod, cartTotalPrice } = cart;
-
-  const user = useSelector((state) => state.userLogin.userInfo);
-
-  const { address, city, state, postalCode, country, telNumber } =
-    shippingAddress;
-
-  const addDecimals = (num) => {
-    return Math.round((num * 100) / 100).toFixed(2);
-  };
-
-  const shippingCost = addDecimals(+cartTotalPrice > 100 ? 0 : 10);
-
-  const taxPrice = addDecimals((+cartTotalPrice + +shippingCost) * 0.15);
-
-  const totalPrice = (+cartTotalPrice + +shippingCost + +taxPrice).toFixed(2);
-
-  if (!user) {
-    history.push("/cart");
-  } else if (!address) {
-    history.push("/shipping");
-  } else if (!paymentMethod) {
-    history.push("/payment");
-  }
-
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { order, success, error } = orderCreate;
-
   useEffect(() => {
-    if (success) {
-      history.push(`/orders/${order._id}`);
-    }
-  }, [history, success]);
+    dispatch(getOrderDetails(orderId));
+  }, [dispatch, getOrderDetails]);
 
-  const placeOrderHandler = () => {
-    dispatch(
-      createOrder({
-        orderItems: cartItems,
-        shippingAddress,
-        paymentMethod,
-        cartTotalPrice: cartTotalPrice,
-        shippingCost,
-        taxPrice,
-        totalPrice,
-      })
-    );
-  };
+  const orderDetails = useSelector((state) => state.orderDetails);
+  const { order, loading, error } = orderDetails;
 
-  return (
+  console.log("order", order);
+
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error}</Message>
+  ) : (
     <>
-      <CheckoutSteps step1 step2 step3 step4 />
+      <h2>Order: {order._id}</h2>
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Order Item</h2>
               <ListGroup variant="flush">
-                {cartItems.map((item, index) => (
+                {order.orderItems.map((item, index) => (
                   <ListGroup.Item key={index}>
                     <Row>
                       <Col md={2}>
@@ -97,7 +63,7 @@ const PlaceOrderScreen = ({ history }) => {
                     <strong>Items Price</strong>
                   </Col>
                   <Col md={4}>
-                    <strong>${cartTotalPrice}/=</strong>
+                    <strong>${order.orderTotalPrice}/=</strong>
                   </Col>
                 </Row>
                 <Row>
@@ -105,7 +71,7 @@ const PlaceOrderScreen = ({ history }) => {
                     <strong>Shipping Cost</strong>
                   </Col>
                   <Col md={4}>
-                    <strong>${shippingCost}/=</strong>
+                    <strong>${order.shippingCost}/=</strong>
                   </Col>
                 </Row>
                 <Row>
@@ -113,26 +79,31 @@ const PlaceOrderScreen = ({ history }) => {
                     <strong>Tax</strong>
                   </Col>
                   <Col md={4}>
-                    <strong>${taxPrice}/=</strong>
+                    <strong>${order.taxPrice}/=</strong>
                   </Col>
                   <Col md={8}>
                     <h5>Total</h5>
                   </Col>
                   <Col md={4}>
-                    <strong>${totalPrice}/=</strong>
+                    <strong>${order.totalPrice}/=</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>
+                  <Col md={8}>
                     <strong>Payment Method</strong>
                   </Col>
                   <Col>
-                    <strong>{paymentMethod}</strong>
+                    <strong>{order.paymentMethod}</strong>
                   </Col>
                 </Row>
-                {paymentMethod === "BankTransfer" ? (
+                {order.isPaid ? (
+                  <Message variant="success">{order.paidAt}</Message>
+                ) : (
+                  <Message variant="danger">Not paid</Message>
+                )}
+                {order.paymentMethod === "BankTransfer" ? (
                   <Row>
                     <Col md={12}>
                       <h6 className="mt-4">Bank Details:</h6>
@@ -155,32 +126,34 @@ const PlaceOrderScreen = ({ history }) => {
               <ListGroup.Item>
                 <h2>Shipping Address</h2>
                 <p>
+                  <strong>Name: {order.user.name}</strong>
                   <br />
-                  {address}
+                  <strong>
+                    Email:{" "}
+                    <a href={`mailto:${order.user.email}`}>
+                      {order.user.email}
+                    </a>{" "}
+                  </strong>
                   <br />
-                  {city}
+                  {order.shippingAddress.address}
                   <br />
-                  {state}
+                  {order.shippingAddress.city}
                   <br />
-                  {postalCode}
+                  {order.shippingAddress.state}
                   <br />
-                  {country}
+                  {order.shippingAddress.postalCode}
                   <br />
-                  {telNumber}
+                  {order.shippingAddress.country}
+                  <br />
+                  {order.shippingAddress.telNumber}
                 </p>
+                {order.isDelivered ? (
+                  <Message variant="success">{order.deliveredAt}</Message>
+                ) : (
+                  <Message variant="danger">Not delivered</Message>
+                )}
               </ListGroup.Item>
             </ListGroup>
-            <ListGroup.Item>
-              {error && <Message variant="danger">{error}</Message>}
-              <Button
-                type="button"
-                className="btn-black"
-                disabled={cartItems === 0}
-                onClick={placeOrderHandler}
-              >
-                Place Order
-              </Button>
-            </ListGroup.Item>
           </Card>
         </Col>
       </Row>
@@ -188,4 +161,4 @@ const PlaceOrderScreen = ({ history }) => {
   );
 };
 
-export default PlaceOrderScreen;
+export default OrderDetailsScreen;

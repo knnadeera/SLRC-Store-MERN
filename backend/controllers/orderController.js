@@ -27,7 +27,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
       shippingAddress,
       paymentMethod,
       taxPrice,
-      cartTotalPrice,
+      orderTotalPrice : cartTotalPrice,
       shippingCost,
       totalPrice,
     });
@@ -50,21 +50,6 @@ export const getOrderById = asyncHandler(async (req, res) => {
 
   if (order) {
     res.json(order);
-  } else {
-    res.status(404);
-    throw new Error("Order not fond");
-  }
-});
-
-// @desc Get user orders
-//@rout GET /api/orders
-//@access Private
-
-export const getUserOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
-
-  if (orders) {
-    res.json(orders);
   } else {
     res.status(404);
     throw new Error("Order not fond");
