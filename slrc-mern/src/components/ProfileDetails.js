@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { getUserDetails, updateUserProfile } from "../actions/userAction";
 import Loader from "./Loader";
 import Message from "./Message";

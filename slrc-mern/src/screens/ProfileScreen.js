@@ -1,10 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { myOrderList } from "../actions/orderActions";
 import { Col, ListGroup, Row } from "react-bootstrap";
+import MyOrderList from "../components/MyOrderList";
 import ProfileDetails from "../components/ProfileDetails";
 
-const ProfileScreen = ({history}) => {
+const ProfileScreen = ({location,history}) => {
   const [profile, setProfile] = useState(true);
   const [myOrders, setMyOrders] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const { loading, error, orders } = orderListMy;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      dispatch(myOrderList());
+    }
+  }, [dispatch, history, userInfo]);
+  console.log(location.pathname);
+  
 
   return (
     <>
@@ -33,7 +54,7 @@ const ProfileScreen = ({history}) => {
         </Col>
         <Col md={9}>
           {profile && <ProfileDetails />}
-          {myOrders && <h1>miisd</h1>}
+          {myOrders && <MyOrderList loading={loading} error={error} orders={orders}/>}
         </Col>
       </Row>
     </>

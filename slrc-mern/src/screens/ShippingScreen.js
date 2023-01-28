@@ -72,7 +72,7 @@ const ShippingScreen = ({ history }) => {
                 onClick={addressEditHandler}
                 type="button"
               >
-                <i class="fa-sharp fa-solid fa-pen"></i> Edit
+                <i className="fa-sharp fa-solid fa-pen"></i> Edit
               </p>
             </Col>
           </ListGroup>

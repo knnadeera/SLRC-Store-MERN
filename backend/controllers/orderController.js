@@ -1,7 +1,7 @@
 import Order from "../models/orderModel.js";
 import asyncHandler from "express-async-handler";
 
-// @desc Create new Order
+//@desc Create new Order
 //@rout POST /api/orders
 //@access Private
 
@@ -14,6 +14,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     cartTotalPrice,
     shippingCost,
     totalPrice,
+    createdAt = Date.now(),
   } = req.body;
 
   if (orderItems && orderItems.length === 0) {
@@ -30,6 +31,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
       orderTotalPrice: cartTotalPrice,
       shippingCost,
       totalPrice,
+      createdAt,
     });
 
     const createdOrder = await order.save();
@@ -38,7 +40,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Get order by ID
+//@desc Get order by ID
 //@rout GET /api/orders/:id
 //@access Private
 
@@ -56,7 +58,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Update order to paid
+//@desc Update order to paid
 //@rout GET /api/orders/:id/pay
 //@access Private
 
@@ -74,10 +76,20 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
-    
+
     res.json(updatedOrder);
   } else {
     res.status(404);
     throw new Error("Order not fond");
   }
+});
+
+//@desc Get logged in user orders
+//@rout GET /api/profile/myorders
+//@access Private
+
+export const getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+
+  res.json(orders);
 });
