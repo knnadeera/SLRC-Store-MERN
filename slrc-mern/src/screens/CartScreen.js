@@ -27,10 +27,6 @@ const CartScreen = ({ match, location, history }) => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  const addDecimals = (num) => {
-    return Math.round((num * 100) / 100).toFixed(2);
-  };
-
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.qty * item.price, 0)
     .toFixed(2);
