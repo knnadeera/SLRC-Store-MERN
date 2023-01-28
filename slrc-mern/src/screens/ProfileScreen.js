@@ -166,13 +166,10 @@ const ProfileScreen = ({ history, location }) => {
               {changePassword && "Cancel Password Change"}
             </a>
           </Form.Group>
-          <Button type="submit" variant="primary">
+          {edit || changePassword && <Button className="mt-2" type="submit" variant="primary">
             Update
-          </Button>
+          </Button>}
         </Form>
-      </Col>
-      <Col md={9}>
-        <h2>My</h2>
       </Col>
     </Row>
   );

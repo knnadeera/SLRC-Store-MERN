@@ -1,23 +1,55 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import { PayPalButton } from "react-paypal-button-v2";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 const OrderDetailsScreen = ({ match }) => {
   const orderId = match.params.id;
 
-  const dispatch = useDispatch();
+  const [sdkReady, setSdkReady] = useState(false);
 
-  useEffect(() => {
-    dispatch(getOrderDetails(orderId));
-  }, [dispatch, orderId]);
+  const dispatch = useDispatch();
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
-  console.log("order", order);
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
+
+  useEffect(() => {
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+
+    if (!order || successPay) {
+      dispatch({type: ORDER_PAY_RESET})
+      dispatch(getOrderDetails(orderId));
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPaypalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, [dispatch, orderId, order, successPay]);
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payOrder(orderId, paymentResult));
+  };
 
   return loading ? (
     <Loader />
@@ -29,6 +61,39 @@ const OrderDetailsScreen = ({ match }) => {
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h2>Shipping Address</h2>
+              <p>
+                <strong>Name: {order.user.name}</strong>
+                <br />
+                <strong>
+                  Email:{" "}
+                  <a href={`mailto:${order.user.email}`}>{order.user.email}</a>{" "}
+                </strong>
+                <br />
+                <strong>Address:</strong> {order.shippingAddress.address}
+                <br />
+                <strong>City: </strong>
+                {order.shippingAddress.city}
+                <br />
+                <strong>State: </strong>
+                {order.shippingAddress.state}
+                <br />
+                <strong>Postal Code: </strong>
+                {order.shippingAddress.postalCode}
+                <br />
+                <strong>Country: </strong>
+                {order.shippingAddress.country}
+                <br />
+                <strong>Tel: </strong>
+                {order.shippingAddress.telNumber}
+              </p>
+              {order.isDelivered ? (
+                <Message variant="success">{order.deliveredAt}</Message>
+              ) : (
+                <Message variant="danger">Not delivered</Message>
+              )}
+            </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Item</h2>
               <ListGroup variant="flush">
@@ -123,36 +188,15 @@ const OrderDetailsScreen = ({ match }) => {
                   <></>
                 )}
               </ListGroup.Item>
-              <ListGroup.Item>
-                <h2>Shipping Address</h2>
-                <p>
-                  <strong>Name: {order.user.name}</strong>
-                  <br />
-                  <strong>
-                    Email:{" "}
-                    <a href={`mailto:${order.user.email}`}>
-                      {order.user.email}
-                    </a>{" "}
-                  </strong>
-                  <br />
-                  {order.shippingAddress.address}
-                  <br />
-                  {order.shippingAddress.city}
-                  <br />
-                  {order.shippingAddress.state}
-                  <br />
-                  {order.shippingAddress.postalCode}
-                  <br />
-                  {order.shippingAddress.country}
-                  <br />
-                  {order.shippingAddress.telNumber}
-                </p>
-                {order.isDelivered ? (
-                  <Message variant="success">{order.deliveredAt}</Message>
-                ) : (
-                  <Message variant="danger">Not delivered</Message>
-                )}
-              </ListGroup.Item>
+              {loadingPay && <Loader />}
+              {!sdkReady ? (
+                <Loader />
+              ) : (
+                <PayPalButton
+                  amount={order.totalPrice}
+                  onSuccess={successPaymentHandler}
+                />
+              )}
             </ListGroup>
           </Card>
         </Col>
