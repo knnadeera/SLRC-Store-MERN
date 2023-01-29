@@ -65,7 +65,7 @@ const ShippingScreen = ({ history }) => {
   };
 
   const addressSaveHandler = () => {
-    dispatch(createAddress({ shippingAddress }));
+    
     setEdit(false);
   };
 

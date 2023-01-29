@@ -4,10 +4,13 @@ import { myOrderList } from "../actions/orderActions";
 import { Col, ListGroup, Row } from "react-bootstrap";
 import MyOrderList from "../components/MyOrderList";
 import ProfileDetails from "../components/ProfileDetails";
+import MyAddress from "../components/MyAddress";
+import { myAddressList } from "../actions/addressAction";
 
-const ProfileScreen = ({location,history}) => {
+const ProfileScreen = ({ location, history }) => {
   const [profile, setProfile] = useState(true);
   const [myOrders, setMyOrders] = useState(false);
+  const [myAddress, setMyAddress] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -15,17 +18,23 @@ const ProfileScreen = ({location,history}) => {
   const { userInfo } = userLogin;
 
   const orderListMy = useSelector((state) => state.orderListMy);
-  const { loading, error, orders } = orderListMy;
+  const {
+    loading: orderListLoading,
+    error: orderListErr,
+    orders,
+  } = orderListMy;
+
+  const address = useSelector((state) => state.myAddresses);
+  const { loading, error, addresses } = address;
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     } else {
       dispatch(myOrderList());
+      dispatch(myAddressList());
     }
   }, [dispatch, history, userInfo]);
-  console.log(location.pathname);
-  
 
   return (
     <>
@@ -36,7 +45,8 @@ const ProfileScreen = ({location,history}) => {
               onClick={() => {
                 setProfile(true);
                 setMyOrders(false);
-                history.push('/profile')
+                setMyAddress(false);
+                history.push("/profile");
               }}
             >
               <h4>Profile</h4>
@@ -45,16 +55,36 @@ const ProfileScreen = ({location,history}) => {
               onClick={() => {
                 setProfile(false);
                 setMyOrders(true);
-                history.push('/profile/myorders')
+                setMyAddress(false);
+                history.push("/profile/myorders");
               }}
             >
-              <h4>My Orders</h4>
+              <h4>Orders</h4>
+            </ListGroup.Item>
+            <ListGroup.Item
+              onClick={() => {
+                setProfile(false);
+                setMyOrders(false);
+                setMyAddress(true);
+                history.push("/profile/myaddress");
+              }}
+            >
+              <h4>Addresses</h4>
             </ListGroup.Item>
           </ListGroup>
         </Col>
         <Col md={9}>
           {profile && <ProfileDetails />}
-          {myOrders && <MyOrderList loading={loading} error={error} orders={orders}/>}
+          {myOrders && (
+            <MyOrderList
+              loading={orderListLoading}
+              error={orderListErr}
+              orders={orders}
+            />
+          )}
+          {myAddress && (
+            <MyAddress loading={loading} error={error} address={addresses} />
+          )}
         </Col>
       </Row>
     </>

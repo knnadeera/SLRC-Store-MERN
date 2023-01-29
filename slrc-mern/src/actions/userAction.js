@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ADDRESS_LIST_MY_RESET } from "../constants/addressConstant";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
 import {
   USER_DETAILS_FAIL,
@@ -57,6 +58,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
+  dispatch({ type: ADDRESS_LIST_MY_RESET });
 };
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -117,7 +119,6 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(`/api/users/profile`, config);
-    
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
@@ -152,7 +153,6 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.put(`/api/users/profile`, user, config);
-    
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
