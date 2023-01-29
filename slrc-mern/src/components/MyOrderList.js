@@ -1,13 +1,22 @@
 import React from "react";
 import { Button, Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const MyOrderList = ({ orders, error, loading }) => {
+const MyOrderList = () => {
+
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const {
+    loading,
+    error,
+    orders,
+  } = orderListMy;
+
   return (
     <>
-      <h2>My Orders</h2>
+      <h2>Orders List</h2>
       {loading ? (
         <Loader />
       ) : error ? (

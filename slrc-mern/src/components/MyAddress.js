@@ -1,12 +1,18 @@
 import React from "react";
 import { Col, ListGroup, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const MyAddress = ({ loading, error, address }) => {
+const MyAddress = () => {
+
+  const address = useSelector((state) => state.myAddresses);
+  const { loading, error, addresses } = address;
+
+  const addressEditHandler = () => {};
   return (
     <>
-      <h2>My Orders</h2>
+      <h2>Address List</h2>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -14,28 +20,30 @@ const MyAddress = ({ loading, error, address }) => {
       ) : (
         <ListGroup>
           <>
-            {address.map((address) => (
-              <ListGroup.Item key={address._id}>
-                <Col md={6}>
-                  <p>
-                    <br />
-                    {address.shippingAddress.address}
-                    <br />
-                    {address.shippingAddress.city}
-                    <br />
-                    {address.shippingAddress.state}
-                    <br />
-                    {address.shippingAddress.postalCode}
-                    <br />
-                    {address.shippingAddress.country}
-                    <br />
-                    {address.shippingAddress.telNumber}
-                  </p>
-                  {/* <p onClick={addressEditHandler} type="button">
-              <i className="fa-sharp fa-solid fa-pen"></i> Edit
-            </p> */}
-                </Col>
-              </ListGroup.Item>
+            {addresses.map((address) => (
+    
+                <Row key={address._id}>
+                  <Col md={10} >
+                    <p>
+                      <br />
+                      {address.shippingAddress.address}
+                      <br />
+                      {address.shippingAddress.city}
+                      <br />
+                      {address.shippingAddress.state}
+                      <br />
+                      {address.shippingAddress.postalCode}
+                      <br />
+                      {address.shippingAddress.country}
+                      <br />
+                      {address.shippingAddress.telNumber}
+                    </p></Col><Col md={2}>
+                    <p onClick={addressEditHandler} type="button">
+                      <i className="fa-sharp fa-solid fa-pen"></i> Edit
+                    </p>
+                  </Col>
+                </Row>
+              
             ))}
           </>
         </ListGroup>

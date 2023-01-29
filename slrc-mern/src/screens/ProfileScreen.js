@@ -17,16 +17,6 @@ const ProfileScreen = ({ location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const orderListMy = useSelector((state) => state.orderListMy);
-  const {
-    loading: orderListLoading,
-    error: orderListErr,
-    orders,
-  } = orderListMy;
-
-  const address = useSelector((state) => state.myAddresses);
-  const { loading, error, addresses } = address;
-
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -75,15 +65,9 @@ const ProfileScreen = ({ location, history }) => {
         </Col>
         <Col md={9}>
           {profile && <ProfileDetails />}
-          {myOrders && (
-            <MyOrderList
-              loading={orderListLoading}
-              error={orderListErr}
-              orders={orders}
-            />
-          )}
+          {myOrders && <MyOrderList />}
           {myAddress && (
-            <MyAddress loading={loading} error={error} address={addresses} />
+            <MyAddress />
           )}
         </Col>
       </Row>

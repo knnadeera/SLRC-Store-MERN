@@ -14,7 +14,7 @@ const LoginScreen = ({ location, history }) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading , error, userInfo } = userLogin;
+  const { loading, error, userInfo } = userLogin;
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -58,9 +58,8 @@ const LoginScreen = ({ location, history }) => {
         </Button>
       </Form>
       <Row className="py-3">
-        
         <Col>
-          New Customer? {' '}
+          New Customer?{" "}
           <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
             Register
           </Link>
