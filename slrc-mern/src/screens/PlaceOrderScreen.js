@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { cartClear } from "../actions/cartActions";
 import { createOrder } from "../actions/orderActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
@@ -55,6 +56,7 @@ const PlaceOrderScreen = ({ history }) => {
         totalPrice,
       })
     );
+    dispatch(cartClear())
   };
 
   return (

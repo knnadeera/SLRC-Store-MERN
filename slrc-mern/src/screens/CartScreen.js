@@ -10,7 +10,6 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { myAddressList } from "../actions/addressAction";
 import {
   addToCart,
   removeFromCart,
@@ -36,7 +35,6 @@ const CartScreen = ({ match, location, history }) => {
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
-    dispatch(myAddressList());
   }, [dispatch, productId, qty]);
 
   // console.log(addresses);

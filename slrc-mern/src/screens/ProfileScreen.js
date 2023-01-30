@@ -8,14 +8,20 @@ import MyAddress from "../components/MyAddress";
 import { myAddressList } from "../actions/addressAction";
 
 const ProfileScreen = ({ location, history }) => {
-  const [profile, setProfile] = useState(true);
-  const [myOrders, setMyOrders] = useState(false);
-  const [myAddress, setMyAddress] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [myOrders, setMyOrders] = useState(null);
+  const [myAddress, setMyAddress] = useState(null);
 
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const address = useSelector((state) => state.myAddresses);
+  const { loading: addressLoading, error: addressError, addresses } = address;
+
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const { loading: ordersLoading, error: ordersError, orders } = orderListMy;
 
   useEffect(() => {
     if (!userInfo) {
@@ -64,10 +70,27 @@ const ProfileScreen = ({ location, history }) => {
           </ListGroup>
         </Col>
         <Col md={9}>
-          {profile && <ProfileDetails />}
-          {myOrders && <MyOrderList />}
-          {myAddress && (
-            <MyAddress />
+          {(profile || location.pathname === "/profile") && <ProfileDetails />}
+          {(myOrders || location.pathname === "/profile/myorders") && (
+            <MyOrderList
+              orders={orders}
+              loading={ordersLoading}
+              error={ordersError}
+            />
+          )}
+          {(myAddress || location.pathname === "/profile/myaddress") && (
+            <>
+              <h2>My Addresses</h2>
+              {addresses.map((address) => (
+                <ListGroup key={address._id}>
+                  <MyAddress
+                    address={address}
+                    loading={addressLoading}
+                    error={addressError}
+                  />
+                </ListGroup>
+              ))}
+            </>
           )}
         </Col>
       </Row>

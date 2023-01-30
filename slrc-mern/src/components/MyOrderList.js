@@ -1,19 +1,10 @@
 import React from "react";
 import { Button, Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const MyOrderList = () => {
-
-  const orderListMy = useSelector((state) => state.orderListMy);
-  const {
-    loading,
-    error,
-    orders,
-  } = orderListMy;
-
+const MyOrderList = ({ loading, error, orders }) => {
   return (
     <>
       <h2>Orders List</h2>
@@ -25,7 +16,7 @@ const MyOrderList = () => {
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>ORDER ID</th>
               <th>Date</th>
               <th>TOTAL</th>
               <th>PAID</th>
@@ -55,7 +46,9 @@ const MyOrderList = () => {
                 </td>
                 <td>
                   <LinkContainer to={`/orders/${orders._id}`}>
-                    <Button className="btn-sm" variant="light">Details</Button>
+                    <Button className="btn-sm" variant="light">
+                      Details
+                    </Button>
                   </LinkContainer>
                 </td>
               </tr>

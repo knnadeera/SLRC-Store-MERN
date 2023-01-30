@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { myAddressList } from "../actions/addressAction";
 import { savePaymentMethod } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 import FormContainer from "../components/FormContainer";
@@ -20,6 +21,10 @@ const PaymentScreen = ({ history }) => {
   }
 
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(myAddressList());
+  },[dispatch])
 
   const submitHandler = (e) => {
     e.preventDefault();

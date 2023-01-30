@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ADDRESS_BY_ID_FAIL,
+  ADDRESS_BY_ID_REQUEST,
+  ADDRESS_BY_ID_SUCCESS,
   ADDRESS_CREATE_FAIL,
   ADDRESS_CREATE_REQUEST,
   ADDRESS_CREATE_SUCCESS,
@@ -67,6 +70,39 @@ export const myAddressList = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ADDRESS_LIST_MY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAddressById = (id) => async (dispatch, getState) => {
+  
+  try {
+    dispatch({
+      type: ADDRESS_BY_ID_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/shipping/${id}`, config);
+    dispatch({
+      type: ADDRESS_BY_ID_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADDRESS_BY_ID_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

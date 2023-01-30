@@ -1,46 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { createAddress } from "../actions/addressAction";
+import { createAddress, myAddressList } from "../actions/addressAction";
 import { saveShippingAddress } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 import FormContainer from "../components/FormContainer";
 import MyAddress from "../components/MyAddress";
 
-const ShippingScreen = ({ history }) => {
-  const cart = useSelector((state) => state.cart);
-  const { shippingAddress } = cart;
-
+const ShippingScreen = ({ history, location }) => {
   const user = useSelector((state) => state.userLogin);
   const { userInfo } = user;
 
   const myAddress = useSelector((state) => state.myAddresses);
-  const { addresses } = myAddress;
+  const {
+    loading: addressListLoading,
+    error: addressListErr,
+    addresses,
+  } = myAddress;
 
-  if (!userInfo || !addresses) {
+  const addressId = useSelector((state) => state.addressById);
+  const { addressById, loading } = addressId;
+
+  if (!userInfo) {
     history.push("/cart");
   }
 
   const [newAddress, setNewAddress] = useState(false);
-  const [address, setAddress] = useState(shippingAddress.address);
-  const [city, setCity] = useState(shippingAddress.city);
-  const [state, setState] = useState(shippingAddress.state);
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
-  const [country, setCountry] = useState(shippingAddress.country);
-  const [telNumber, setTelNumber] = useState(shippingAddress.telNumber);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState();
+  const [telNumber, setTelNumber] = useState();
+  const [selected, setSelected] = useState(null);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(myAddressList());
+  }, [dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
       saveShippingAddress({
-        address,
-        city,
-        state,
-        postalCode,
-        country,
-        telNumber,
+        address: addressById.shippingAddress.address,
+        city: addressById.shippingAddress.city,
+        state: addressById.shippingAddress.state,
+        postalCode: addressById.shippingAddress.postalCode,
+        country: addressById.shippingAddress.country,
+        telNumber: addressById.shippingAddress.telNumber,
       })
     );
 
@@ -60,13 +69,24 @@ const ShippingScreen = ({ history }) => {
         },
       })
     );
+    dispatch(
+      saveShippingAddress({
+        address,
+        city,
+        state,
+        postalCode,
+        country,
+        telNumber,
+      })
+    );
+
+    history.push("/payment");
     setNewAddress(false);
   };
 
   const addNewAddressHandler = () => {
     setNewAddress(true);
   };
-
   return (
     <>
       <CheckoutSteps step1 step2 />
@@ -82,7 +102,24 @@ const ShippingScreen = ({ history }) => {
             <ListGroup>
               <Row>
                 <Col>
-                  <MyAddress />
+                  {addresses.map((address, index) => (
+                    <ListGroup
+                      key={address._id}
+                      style={{
+                        backgroundColor:
+                          selected === index ? "lightgray" : "white",
+                      }}
+                      onClick={() =>
+                        setSelected(selected === index ? null : index)
+                      }
+                    >
+                      <MyAddress
+                        address={address}
+                        loading={addressListLoading}
+                        error={addressListErr}
+                      />
+                    </ListGroup>
+                  ))}
                 </Col>
               </Row>
             </ListGroup>
@@ -154,7 +191,7 @@ const ShippingScreen = ({ history }) => {
               onClick={newAddressSaveHandler}
               className="mt-3 "
             >
-              Save
+              Save & Continue
             </Button>
             <Button
               type="button"
@@ -171,6 +208,7 @@ const ShippingScreen = ({ history }) => {
           <Button
             type="button"
             variant="primary"
+            disabled={loading}
             onClick={submitHandler}
             className="mt-3"
           >

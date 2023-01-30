@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
@@ -35,7 +35,7 @@ const OrderDetailsScreen = ({ match }) => {
     };
 
     if (!order || successPay) {
-      dispatch({type: ORDER_PAY_RESET})
+      dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -47,7 +47,6 @@ const OrderDetailsScreen = ({ match }) => {
   }, [dispatch, orderId, order, successPay]);
 
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
   };
 
@@ -196,7 +195,9 @@ const OrderDetailsScreen = ({ match }) => {
                   amount={order.totalPrice}
                   onSuccess={successPaymentHandler}
                 />
-              ):<></>}
+              ) : (
+                <></>
+              )}
             </ListGroup>
           </Card>
         </Col>
