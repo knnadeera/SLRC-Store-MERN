@@ -1,13 +1,25 @@
 import React from "react";
 import { Button, Table } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
+import { deleteUser } from "../actions/userAction";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const UserList = ({userList}) => {
-  const { loading, error, users } = userList;
+const UserList = ({ userList, userId }) => {
+  const dispatch = useDispatch();
 
-  const deleteHandler=(id)=>{}
+  const { loading, error, users } = userList;
+  console.log(userId);
+
+  const deleteHandler = (id) => {
+    if (userId === id) {
+      alert("You cant delete your admin account");
+      return;
+    } else if (window.confirm("Are you sure")) {
+      dispatch(deleteUser(id));
+    }
+  };
   return (
     <>
       {loading ? (

@@ -14,7 +14,8 @@ const DashboardScreen = ({ location, history }) => {
 
   const userList = useSelector((state) => state.userList);
   const listOrders = useSelector((state) => state.orderList);
-
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(orderList());
@@ -22,7 +23,7 @@ const DashboardScreen = ({ location, history }) => {
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, successDelete]);
 
   return (
     <>
@@ -61,7 +62,7 @@ const DashboardScreen = ({ location, history }) => {
         </Col>
         <Col md={9}>
           {location.pathname === "/dashboard/users" && (
-            <UserList userList={userList} />
+            <UserList userList={userList} userId={userInfo._id} />
           )}
           {location.pathname === "/dashboard/orders" && (
             <OrderList listOrders={listOrders} />
