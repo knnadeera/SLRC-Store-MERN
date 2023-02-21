@@ -9,8 +9,6 @@ import { myAddressList } from "../actions/addressAction";
 
 const ProfileScreen = ({ location, history }) => {
   const [profile, setProfile] = useState(null);
-  const [myOrders, setMyOrders] = useState(null);
-  const [myAddress, setMyAddress] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -37,31 +35,34 @@ const ProfileScreen = ({ location, history }) => {
       <Row>
         <Col md={3}>
           <ListGroup>
-            <ListGroup.Item
+            <ListGroup.Item role="button"
               onClick={() => {
                 setProfile(true);
-                setMyOrders(false);
-                setMyAddress(false);
                 history.push("/profile");
               }}
             >
               <h4>Profile</h4>
             </ListGroup.Item>
-            <ListGroup.Item
+            {userInfo && userInfo.isAdmin && (
+              <ListGroup.Item role="button"
+                onClick={() => {
+                  history.push("/dashboard");
+                }}
+              >
+                <h4>Dashboard</h4>
+              </ListGroup.Item>
+            )}
+            <ListGroup.Item role="button"
               onClick={() => {
                 setProfile(false);
-                setMyOrders(true);
-                setMyAddress(false);
                 history.push("/profile/myorders");
               }}
             >
               <h4>Orders</h4>
             </ListGroup.Item>
-            <ListGroup.Item
+            <ListGroup.Item role="button"
               onClick={() => {
                 setProfile(false);
-                setMyOrders(false);
-                setMyAddress(true);
                 history.push("/profile/myaddress");
               }}
             >
@@ -71,14 +72,14 @@ const ProfileScreen = ({ location, history }) => {
         </Col>
         <Col md={9}>
           {(profile || location.pathname === "/profile") && <ProfileDetails />}
-          {(myOrders || location.pathname === "/profile/myorders") && (
+          {(location.pathname === "/profile/myorders") && (
             <MyOrderList
               orders={orders}
               loading={ordersLoading}
               error={ordersError}
             />
           )}
-          {(myAddress || location.pathname === "/profile/myaddress") && (
+          {(location.pathname === "/profile/myaddress") && (
             <>
               <h2>My Addresses</h2>
               {addresses.map((address) => (
