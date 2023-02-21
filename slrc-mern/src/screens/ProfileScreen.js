@@ -46,7 +46,7 @@ const ProfileScreen = ({ location, history }) => {
             {userInfo && userInfo.isAdmin && (
               <ListGroup.Item role="button"
                 onClick={() => {
-                  history.push("/dashboard");
+                  history.push("/dashboard/orders");
                 }}
               >
                 <h4>Dashboard</h4>

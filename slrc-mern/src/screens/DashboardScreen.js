@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderList } from "../actions/orderActions";
 import { Col, ListGroup, Row } from "react-bootstrap";
-import UserListScreen from "./UserListScreen";
+import UserList from "../components/UserList";
 import { listUsers } from "../actions/userAction";
 import OrderList from "../components/OrderList";
 
 const DashboardScreen = ({ location, history }) => {
-  const [orders, setOrders] = useState(null);
-
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -16,14 +14,13 @@ const DashboardScreen = ({ location, history }) => {
 
   const userList = useSelector((state) => state.userList);
   const listOrders = useSelector((state) => state.orderList);
-  console.log(listOrders)
 
   useEffect(() => {
-    if (!userInfo || !userInfo.isAdmin) {
-      history.push("/login");
-    } else {
+    if (userInfo && userInfo.isAdmin) {
       dispatch(orderList());
       dispatch(listUsers());
+    } else {
+      history.push("/login");
     }
   }, [dispatch, history, userInfo]);
 
@@ -44,7 +41,6 @@ const DashboardScreen = ({ location, history }) => {
               <ListGroup.Item
                 role="button"
                 onClick={() => {
-                  setOrders(true);
                   history.push("/dashboard/orders");
                 }}
               >
@@ -55,7 +51,6 @@ const DashboardScreen = ({ location, history }) => {
               <ListGroup.Item
                 role="button"
                 onClick={() => {
-                  setOrders(false);
                   history.push("/dashboard/users");
                 }}
               >
@@ -66,7 +61,7 @@ const DashboardScreen = ({ location, history }) => {
         </Col>
         <Col md={9}>
           {location.pathname === "/dashboard/users" && (
-            <UserListScreen userList={userList} />
+            <UserList userList={userList} />
           )}
           {location.pathname === "/dashboard/orders" && (
             <OrderList listOrders={listOrders} />

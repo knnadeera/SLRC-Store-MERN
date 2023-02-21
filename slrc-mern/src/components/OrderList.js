@@ -5,8 +5,9 @@ import Loader from "./Loader";
 import Message from "./Message";
 
 const OrderList = ({ listOrders }) => {
-  const { loading, error, orders } = listOrders;
   const [sortOrder, setSortOrder] = useState("desc");
+
+  const { loading, error, orders } = listOrders;
 
   const handleSortByCreatedDate = () => {
     const newSortOrder = sortOrder === "desc" ? "asc" : "desc";
@@ -16,8 +17,8 @@ const OrderList = ({ listOrders }) => {
 
   // sort orders by paidAt in descending order
   const sortedOrders = [...orders].sort((a, b) => {
-    const dateA = new Date(a.abc);
-    const dateB = new Date(b.abc);
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
     if (sortOrder === "asc") {
       return dateA - dateB;
     } else {

@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Table } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
+import Loader from "./Loader";
+import Message from "./Message";
 
-const UserListScreen = ({userList}) => {
+const UserList = ({userList}) => {
   const { loading, error, users } = userList;
 
   const deleteHandler=(id)=>{}
@@ -63,4 +63,4 @@ const UserListScreen = ({userList}) => {
   );
 };
 
-export default UserListScreen;
+export default UserList;
