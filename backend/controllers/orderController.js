@@ -93,3 +93,13 @@ export const getMyOrders = asyncHandler(async (req, res) => {
 
   res.json(orders);
 });
+
+//@desc Get  orders
+//@rout GET /api/orders
+//@access Private
+
+export const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({});
+
+  res.json(orders);
+});
