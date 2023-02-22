@@ -16,6 +16,9 @@ import {
   ORDER_PAY_REQUEST,
   ORDER_PAY_RESET,
   ORDER_PAY_SUCCESS,
+  ORDER_RECEIVED_FAIL,
+  ORDER_RECEIVED_REQUEST,
+  ORDER_RECEIVED_SUCCESS,
   ORDER_UPDATE_FAIL,
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
@@ -59,6 +62,19 @@ export const orderPayReducer = (state = {}, action) => {
     case ORDER_PAY_FAIL:
       return { loading: false, error: action.payload };
     case ORDER_PAY_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const orderReceivedReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ORDER_RECEIVED_REQUEST:
+      return { loading: true };
+    case ORDER_RECEIVED_SUCCESS:
+      return { loading: false, success: true };
+    case ORDER_RECEIVED_FAIL:
       return {};
     default:
       return state;

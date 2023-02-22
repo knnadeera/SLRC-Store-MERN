@@ -107,6 +107,27 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc user order received
+//@rout GET /api/orders/:id
+//@access Private
+
+export const userReceivedOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.orderStatus = "Order Received";
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not fond");
+  }
+});
+
 //@desc Get logged in user orders
 //@rout GET /api/profile/myorders
 //@access Private

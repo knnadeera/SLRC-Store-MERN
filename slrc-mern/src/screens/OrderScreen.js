@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getOrderDetails,
   payOrder,
+  receivedOrder,
   updateStatusOrder,
 } from "../actions/orderActions";
 import Loader from "../components/Loader";
@@ -53,7 +54,7 @@ const OrderDetailsScreen = ({ match }) => {
     };
 
     if (id !== orderId) {
-      setId(orderId)
+      setId(orderId);
       dispatch(getOrderDetails(orderId));
     } else if (!order || successPay) {
       dispatch({ type: ORDER_PAY_RESET });
@@ -74,8 +75,15 @@ const OrderDetailsScreen = ({ match }) => {
     dispatch(payOrder(orderId, paymentResult));
   };
 
-  const OrderStatusHandler = () => {
+  const orderStatusHandler = () => {
     dispatch(updateStatusOrder(orderId, { orderStatus }));
+    dispatch(getOrderDetails(orderId));
+  };
+
+  const orderReceivedHandler = () => {
+    setOrderStatus("Order Received")
+    dispatch(receivedOrder(orderId, {}));
+    dispatch(getOrderDetails(orderId));
   };
 
   return loading ? (
@@ -241,10 +249,15 @@ const OrderDetailsScreen = ({ match }) => {
                     <option value={"Shipped"}>Shipped</option>
                     <option value={"Delivered"}>Delivered</option>
                   </Form.Control>
-                  <Button className="btn-sm" onClick={OrderStatusHandler}>
+                  <Button className="btn-sm" onClick={orderStatusHandler}>
                     Update
                   </Button>
                 </ListGroup.Item>
+              )}
+              {order.orderStatus === "Order Received" ? (
+                <Button disabled>{order.orderStatus}</Button>
+              ) : (
+                <Button onClick={orderReceivedHandler}>Order Received</Button>
               )}
             </ListGroup>
           </Card>

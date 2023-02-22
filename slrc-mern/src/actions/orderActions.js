@@ -16,6 +16,9 @@ import {
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
+  ORDER_RECEIVED_FAIL,
+  ORDER_RECEIVED_REQUEST,
+  ORDER_RECEIVED_SUCCESS,
   ORDER_UPDATE_FAIL,
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
@@ -128,6 +131,44 @@ export const payOrder =
     }
   };
 
+export const receivedOrder = (orderId, order) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDER_RECEIVED_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/received`,
+      order,
+      config
+    );
+
+    dispatch({
+      type: ORDER_RECEIVED_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_RECEIVED_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const updateStatusOrder =
   (orderId, order) => async (dispatch, getState) => {
     try {
@@ -146,7 +187,7 @@ export const updateStatusOrder =
         },
       };
 
-      const { data } = await axios.put(`/api/orders/${orderId}`, order, config);
+      const { data } = await axios.put(`/api/orders/${orderId}/update`, order, config);
 
       dispatch({
         type: ORDER_UPDATE_SUCCESS,
