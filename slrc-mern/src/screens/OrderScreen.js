@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Image,
+  ListGroup,
+  Row,
+} from "react-bootstrap";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
+import {
+  getOrderDetails,
+  payOrder,
+  updateStatusOrder,
+} from "../actions/orderActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
@@ -11,9 +23,15 @@ import { ORDER_PAY_RESET } from "../constants/orderConstants";
 const OrderDetailsScreen = ({ match }) => {
   const orderId = match.params.id;
 
+  const [id, setId] = useState();
+
   const [sdkReady, setSdkReady] = useState(false);
+  const [orderStatus, setOrderStatus] = useState(null);
 
   const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
@@ -34,7 +52,10 @@ const OrderDetailsScreen = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || successPay) {
+    if (id !== orderId) {
+      setId(orderId)
+      dispatch(getOrderDetails(orderId));
+    } else if (!order || successPay) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
@@ -44,10 +65,17 @@ const OrderDetailsScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
+    // if (order) {
+    //   dispatch(getOrderDetails(orderId));
+    // }
   }, [dispatch, orderId, order, successPay]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const OrderStatusHandler = () => {
+    dispatch(updateStatusOrder(orderId, { orderStatus }));
   };
 
   return loading ? (
@@ -197,6 +225,26 @@ const OrderDetailsScreen = ({ match }) => {
                 />
               ) : (
                 <></>
+              )}
+              {userInfo.isAdmin && (
+                <ListGroup.Item>
+                  <Form.Control
+                    as="select"
+                    onChange={(e) =>
+                      e.target.value === null
+                        ? setOrderStatus(order.orderStatus)
+                        : setOrderStatus(e.target.value)
+                    }
+                  >
+                    <option>{order.orderStatus}</option>
+                    <option value={"Processing"}>Processing</option>
+                    <option value={"Shipped"}>Shipped</option>
+                    <option value={"Delivered"}>Delivered</option>
+                  </Form.Control>
+                  <Button className="btn-sm" onClick={OrderStatusHandler}>
+                    Update
+                  </Button>
+                </ListGroup.Item>
               )}
             </ListGroup>
           </Card>

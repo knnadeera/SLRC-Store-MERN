@@ -25,52 +25,55 @@ const DashboardScreen = ({ location, history }) => {
     }
   }, [dispatch, history, userInfo, successDelete]);
 
-  return (
-    <>
-      <Row>
-        <Col md={3}>
-          <ListGroup>
-            <ListGroup.Item
-              role="button"
-              onClick={() => {
-                history.push("/profile");
-              }}
-            >
-              <h4>Admin Profile</h4>
-            </ListGroup.Item>
-            {userInfo && userInfo.isAdmin && (
+  if (location.pathname === "/dashboard"){
+    history.push("/dashboard/orders")
+  }
+    return (
+      <>
+        <Row>
+          <Col md={3}>
+            <ListGroup>
               <ListGroup.Item
                 role="button"
                 onClick={() => {
-                  history.push("/dashboard/orders");
+                  history.push("/profile");
                 }}
               >
-                <h4>Orders</h4>
+                <h4>Admin Profile</h4>
               </ListGroup.Item>
+              {userInfo && userInfo.isAdmin && (
+                <ListGroup.Item
+                  role="button"
+                  onClick={() => {
+                    history.push("/dashboard/orders");
+                  }}
+                >
+                  <h4>Orders</h4>
+                </ListGroup.Item>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <ListGroup.Item
+                  role="button"
+                  onClick={() => {
+                    history.push("/dashboard/users");
+                  }}
+                >
+                  <h4>Users</h4>
+                </ListGroup.Item>
+              )}
+            </ListGroup>
+          </Col>
+          <Col md={9}>
+            {location.pathname === "/dashboard/users" && (
+              <UserList userList={userList} userId={userInfo._id} />
             )}
-            {userInfo && userInfo.isAdmin && (
-              <ListGroup.Item
-                role="button"
-                onClick={() => {
-                  history.push("/dashboard/users");
-                }}
-              >
-                <h4>Users</h4>
-              </ListGroup.Item>
+            {location.pathname === "/dashboard/orders" && (
+              <OrderList listOrders={listOrders} />
             )}
-          </ListGroup>
-        </Col>
-        <Col md={9}>
-          {location.pathname === "/dashboard/users" && (
-            <UserList userList={userList} userId={userInfo._id} />
-          )}
-          {location.pathname === "/dashboard/orders" && (
-            <OrderList listOrders={listOrders} />
-          )}
-        </Col>
-      </Row>
-    </>
-  );
+          </Col>
+        </Row>
+      </>
+    );
 };
 
 export default DashboardScreen;

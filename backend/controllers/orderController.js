@@ -68,6 +68,7 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
   if (order) {
     order.isPaid = true;
     order.paidAt = Date.now();
+    order.orderStatus = "Paid";
     order.paymentResult = {
       id: req.body.id,
       status: req.body.status,
@@ -78,6 +79,28 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
 
     res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not fond");
+  }
+});
+
+//@desc Update order Status
+//@rout GET /api/orders/:id
+//@access Private
+
+export const updateOrderStatus = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.orderStatus = req.body.orderStatus;
+
+    const updatedOrder = await order.save();
+
+    res.json({
+      _id: updatedOrder._id,
+      orderStatus: updatedOrder.orderStatus,
+    });
   } else {
     res.status(404);
     throw new Error("Order not fond");

@@ -49,7 +49,7 @@ const OrderList = ({ listOrders }) => {
               </th>
               <th>TOTAL</th>
               <th>PAID</th>
-              <th>DELIVERED</th>
+              <th>Order Status</th>
               <th></th>
             </tr>
           </thead>
@@ -67,10 +67,10 @@ const OrderList = ({ listOrders }) => {
                   )}
                 </td>
                 <td>
-                  {orders.isDelivered ? (
+                  {orders.orderStatus === 'Delivered' ? (
                     orders.deliveredAt.substring(0, 10)
                   ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                    orders.orderStatus
                   )}
                 </td>
                 <td>

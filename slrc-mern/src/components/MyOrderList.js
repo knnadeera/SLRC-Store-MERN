@@ -20,7 +20,7 @@ const MyOrderList = ({ loading, error, orders }) => {
               <th>Date</th>
               <th>TOTAL</th>
               <th>PAID</th>
-              <th>DELIVERED</th>
+              <th>Order Status</th>
               <th></th>
             </tr>
           </thead>
@@ -38,11 +38,9 @@ const MyOrderList = ({ loading, error, orders }) => {
                   )}
                 </td>
                 <td>
-                  {orders.isDelivered ? (
-                    orders.deliveredAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
+                  {orders.orderStatus === "Delivered"
+                    ? orders.deliveredAt.substring(0, 10)
+                    : orders.orderStatus}
                 </td>
                 <td>
                   <LinkContainer to={`/orders/${orders._id}`}>

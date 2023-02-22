@@ -43,6 +43,7 @@ const orderSchema = mongoose.Schema(
     totalPrice: { type: Number, require: true, default: 0.0 },
     isPaid: { type: Boolean, require: true, default: false },
     paidAt: { type: Date },
+    orderStatus: { type: String, require: true, default: "Not Paid" },
     isDelivered: { type: Boolean, require: true, default: false },
     deliveredAt: { type: Date },
     createdAt: { type: Date },
