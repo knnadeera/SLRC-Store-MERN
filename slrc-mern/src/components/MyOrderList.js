@@ -38,8 +38,11 @@ const MyOrderList = ({ loading, error, orders }) => {
                   )}
                 </td>
                 <td>
-                  {orders.orderStatus === "Delivered"
-                    ? orders.deliveredAt.substring(0, 10)
+                  {orders.orderStatus === "Delivered" ||
+                  orders.orderStatus === "Order Received"
+                    ? <>
+                    {orders.orderStatus} {orders.deliveredAt.substring(0, 10)}
+                  </>
                     : orders.orderStatus}
                 </td>
                 <td>

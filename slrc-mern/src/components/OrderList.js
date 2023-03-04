@@ -14,7 +14,6 @@ const OrderList = ({ listOrders }) => {
     setSortOrder(newSortOrder);
   };
 
-
   // sort orders by paidAt in descending order
   const sortedOrders = [...orders].sort((a, b) => {
     const dateA = new Date(a.createdAt);
@@ -67,8 +66,11 @@ const OrderList = ({ listOrders }) => {
                   )}
                 </td>
                 <td>
-                  {orders.orderStatus === 'Delivered' ? (
-                    orders.deliveredAt.substring(0, 10)
+                  {orders.orderStatus === "Delivered" ||
+                  orders.orderStatus === "Order Received" ? (
+                    <>
+                      {orders.orderStatus} {orders.deliveredAt.substring(0, 10)}
+                    </>
                   ) : (
                     orders.orderStatus
                   )}

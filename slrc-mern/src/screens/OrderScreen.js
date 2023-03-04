@@ -21,7 +21,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
-const OrderDetailsScreen = ({ match }) => {
+const OrderDetailsScreen = ({ match, history }) => {
   const orderId = match.params.id;
 
   const [id, setId] = useState();
@@ -77,13 +77,15 @@ const OrderDetailsScreen = ({ match }) => {
 
   const orderStatusHandler = () => {
     dispatch(updateStatusOrder(orderId, { orderStatus }));
+    history.push("/dashboard/orders");
     dispatch(getOrderDetails(orderId));
   };
 
   const orderReceivedHandler = () => {
-    setOrderStatus("Order Received")
+    setOrderStatus("Order Received");
     dispatch(receivedOrder(orderId, {}));
     dispatch(getOrderDetails(orderId));
+    history.push("/profile/myorders");
   };
 
   return loading ? (
@@ -256,9 +258,9 @@ const OrderDetailsScreen = ({ match }) => {
               )}
               {order.orderStatus === "Order Received" ? (
                 <Button disabled>{order.orderStatus}</Button>
-              ) : (
+              ) :  (
                 <Button onClick={orderReceivedHandler}>Order Received</Button>
-              )}
+              ) }
             </ListGroup>
           </Card>
         </Col>

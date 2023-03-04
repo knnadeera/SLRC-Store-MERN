@@ -94,6 +94,15 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
 
   if (order) {
     order.orderStatus = req.body.orderStatus;
+    if (req.body.orderStatus !== "Order Received") {
+      order.deliveredAt = "";
+      order.isDelivered = false;
+    }
+    if (req.body.orderStatus === "Delivered") {
+      order.orderStatus = "Delivered";
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+    }
 
     const updatedOrder = await order.save();
 
