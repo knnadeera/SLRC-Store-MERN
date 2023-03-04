@@ -75,14 +75,18 @@ const OrderDetailsScreen = ({ match, history }) => {
     dispatch(payOrder(orderId, paymentResult));
   };
 
-  const orderStatusHandler = () => {
+  const orderStatusHandler = async() => {
     dispatch(updateStatusOrder(orderId, { orderStatus }));
     history.push("/dashboard/orders");
     dispatch(getOrderDetails(orderId));
   };
 
   const orderReceivedHandler = () => {
-    setOrderStatus("Order Received");
+    if (userInfo.isAdmin) {
+      setOrderStatus("Delivered");
+    } else {
+      setOrderStatus("Order Received");
+    }
     dispatch(receivedOrder(orderId, {}));
     dispatch(getOrderDetails(orderId));
     history.push("/profile/myorders");
@@ -275,10 +279,16 @@ const OrderDetailsScreen = ({ match, history }) => {
                 </ListGroup.Item>
               )}
               {order.orderStatus !== "Shipped" ||
-              order.orderStatus === "Order Received" ? (
+              order.orderStatus === "Order Received" ||
+              order.orderStatus === "Delivered" ? (
                 <Button disabled>{order.orderStatus}</Button>
+              ) : userInfo.isAdmin ? (
+                <Button onClick={orderStatusHandler}>
+                  Delivered
+                </Button>
               ) : (
-                <Button onClick={orderReceivedHandler}>Order Received</Button>
+                <Button onClick={orderReceivedHandler}> Order Received
+                </Button>
               )}
             </ListGroup>
           </Card>
