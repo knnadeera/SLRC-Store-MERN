@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
+import Address from "../models/addressModel.js";
 
 // @desc Auth user & get token
 //@rout POST /api/users/login
@@ -91,7 +92,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (await user.matchPassword(password)) {
     if (user) {
       user.name = req.body.name || user.name;
-      user.email = req.body.email || user.mail;
+      user.email = req.body.email || user.email;
       if (req.body.newPassword) {
         user.password = req.body.newPassword;
       }
@@ -134,7 +135,52 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   if (user) {
     await user.remove();
-    res.json({ messge: " User removed" });
+    res.json({ message: " User removed" });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// @desc Get user
+//@rout GET /api/users/:id
+//@access Private/Admin
+
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select("-password");
+  const address = await Address.find({ user: req.params.id });
+
+  if (user) {
+    res.json({ user, address });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// @desc Update User
+//@rout PUT/api/users/:id
+//@access Private/Admin
+
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin || user.isAdmin;
+    if (req.body.newPassword) {
+      user.password = req.body.newPassword;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -148,4 +194,6 @@ export {
   updateUserProfile,
   getUsers,
   deleteUser,
+  getUserById,
+  updateUser,
 };

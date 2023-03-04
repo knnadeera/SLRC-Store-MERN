@@ -72,6 +72,6 @@ export const getAddressById = asyncHandler(async (req, res) => {
     res.json(address);
   } else {
     res.status(404);
-    throw new Error("Order not fond");
+    throw new Error("Address not fond");
   }
 });
