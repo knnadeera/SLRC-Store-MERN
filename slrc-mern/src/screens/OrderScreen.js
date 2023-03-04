@@ -240,27 +240,46 @@ const OrderDetailsScreen = ({ match, history }) => {
                 <ListGroup.Item>
                   <Form.Control
                     as="select"
+                    value={
+                      orderStatus === null ? order.orderStatus : orderStatus
+                    }
                     onChange={(e) =>
                       e.target.value === null
                         ? setOrderStatus(order.orderStatus)
                         : setOrderStatus(e.target.value)
                     }
                   >
-                    <option>{order.orderStatus}</option>
-                    <option value={"Processing"}>Processing</option>
-                    <option value={"Shipped"}>Shipped</option>
-                    <option value={"Delivered"}>Delivered</option>
+                    <option disabled value={order.orderStatus}>
+                      {order.orderStatus}
+                    </option>
+                    {order.orderStatus !== "Not Paid" && (
+                      <option value={"Not Paid"}>Not Paid</option>
+                    )}
+                    {order.orderStatus !== "Processing" && (
+                      <option value={"Processing"}>Processing</option>
+                    )}
+                    {order.orderStatus !== "Shipped" && (
+                      <option value={"Shipped"}>Shipped</option>
+                    )}
+                    {order.orderStatus !== "Delivered" && (
+                      <option value={"Delivered"}>Delivered</option>
+                    )}
                   </Form.Control>
-                  <Button className="btn-sm" onClick={orderStatusHandler}>
+                  <Button
+                    disabled={orderStatus === null}
+                    className="btn-sm"
+                    onClick={orderStatusHandler}
+                  >
                     Update
                   </Button>
                 </ListGroup.Item>
               )}
-              {order.orderStatus === "Order Received" ? (
+              {order.orderStatus !== "Shipped" ||
+              order.orderStatus === "Order Received" ? (
                 <Button disabled>{order.orderStatus}</Button>
-              ) :  (
+              ) : (
                 <Button onClick={orderReceivedHandler}>Order Received</Button>
-              ) }
+              )}
             </ListGroup>
           </Card>
         </Col>
