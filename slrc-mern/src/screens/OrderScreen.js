@@ -69,7 +69,7 @@ const OrderDetailsScreen = ({ match, history }) => {
     // if (order) {
     //   dispatch(getOrderDetails(orderId));
     // }
-  }, [dispatch, orderId, order, successPay]);
+  }, [dispatch, orderId, order, successPay,id]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));

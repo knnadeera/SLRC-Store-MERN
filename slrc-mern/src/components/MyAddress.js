@@ -5,7 +5,7 @@ import { getAddressById } from "../actions/addressAction";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const MyAddress = ({ address, loading, error }) => {
+const MyAddress = ({ address, loading, error,fromUserEditScreen }) => {
   const dispatch = useDispatch();
 
   const addressEditHandler = () => {};
@@ -39,11 +39,11 @@ const MyAddress = ({ address, loading, error }) => {
                   {address.shippingAddress.telNumber}
                 </p>
               </Col>
-              <Col md={2}>
+              {!fromUserEditScreen && <Col md={2}>
                 <p onClick={addressEditHandler} type="button">
                   <i className="fa-sharp fa-solid fa-pen"></i> Edit
                 </p>
-              </Col>
+              </Col>}
             </Row>
           </>
         </ListGroup>

@@ -20,7 +20,7 @@ const Header = (history) => {
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
-              <img src="/images/slrclogo.png" width="30" /> SLRC Store
+              <img src="/images/slrclogo.png" width="30" alt="logo"/> SLRC Store
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

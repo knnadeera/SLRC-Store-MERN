@@ -164,14 +164,14 @@ const getUserById = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
+  console.log('ub',user)
+  console.log('ubi',req.params.id)
 
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.isAdmin = req.body.isAdmin || user.isAdmin;
-    if (req.body.newPassword) {
-      user.password = req.body.newPassword;
-    }
+    user.password = req.body.newPassword || user.password;
 
     const updatedUser = await user.save();
 

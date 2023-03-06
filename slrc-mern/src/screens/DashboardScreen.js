@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderList } from "../actions/orderActions";
 import { Col, ListGroup, Row } from "react-bootstrap";
@@ -65,7 +65,7 @@ const DashboardScreen = ({ location, history }) => {
           </Col>
           <Col md={9}>
             {location.pathname === "/dashboard/users" && (
-              <UserList userList={userList} userId={userInfo._id} />
+              <UserList userInfo={userInfo} userList={userList} userId={userInfo._id} />
             )}
             {location.pathname === "/dashboard/orders" && (
               <OrderList listOrders={listOrders} />

@@ -6,11 +6,10 @@ import { deleteUser } from "../actions/userAction";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const UserList = ({ userList, userId }) => {
+const UserList = ({ userInfo, userList, userId }) => {
   const dispatch = useDispatch();
 
   const { loading, error, users } = userList;
-  console.log(userId);
 
   const deleteHandler = (id) => {
     if (userId === id) {
@@ -20,6 +19,7 @@ const UserList = ({ userList, userId }) => {
       dispatch(deleteUser(id));
     }
   };
+
   return (
     <>
       {loading ? (
@@ -43,7 +43,7 @@ const UserList = ({ userList, userId }) => {
                 <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>
-                  <a href={`mailto:${user.emril}`}>{user.email}</a>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
                 </td>
                 <td>
                   {user.isAdmin ? (
@@ -52,9 +52,9 @@ const UserList = ({ userList, userId }) => {
                     <i className="fas fa-times" style={{ color: "red" }}></i>
                   )}
                 </td>
-                <td>
-                  <LinkContainer to={`/user/${user._id}/edit`}>
-                    <Button variant="light" className="btn-sm">
+                { user._id !== userInfo._id && <td>
+                  <LinkContainer to={`/admin/users/${user._id}`}>
+                    <Button variant="light" className="btn-sm" >
                       <i className="fas fa-edit"></i>
                     </Button>
                   </LinkContainer>
@@ -65,7 +65,7 @@ const UserList = ({ userList, userId }) => {
                   >
                     <i className="fas fa-trash"></i>
                   </Button>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

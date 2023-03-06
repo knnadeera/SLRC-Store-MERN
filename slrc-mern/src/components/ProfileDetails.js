@@ -5,7 +5,7 @@ import { getUserDetails, updateUserProfile } from "../actions/userAction";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const ProfileDetails = ({ history, location }) => {
+const ProfileDetails = ({ history }) => {
   const [edit, setEdit] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
   const [name, setName] = useState("");
@@ -134,7 +134,7 @@ const ProfileDetails = ({ history, location }) => {
             </>
           )}
           <Form.Group>
-            <a
+            <div
               style={{
                 cursor: "pointer",
                 ":hover": { color: "red" },
@@ -143,7 +143,7 @@ const ProfileDetails = ({ history, location }) => {
             >
               {!changePassword && "Change Your Password"}
               {changePassword && "Cancel Password Change"}
-            </a>
+            </div>
           </Form.Group>
           {edit ||
             (changePassword && (
