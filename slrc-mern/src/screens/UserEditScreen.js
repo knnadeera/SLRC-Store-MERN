@@ -42,6 +42,7 @@ const UserEditScreen = ({ history, match }) => {
       } else {
         setName(userData.name);
         setEmail(userData.email);
+        setIsAdmin(userData.isAdmin)
       }
       setSubmitted(false);
     }
@@ -75,7 +76,7 @@ const UserEditScreen = ({ history, match }) => {
       );
     }
     setSubmitted(true);
-    console.log(isAdmin)
+    console.log(isAdmin);
   };
 
   return (
@@ -117,21 +118,21 @@ const UserEditScreen = ({ history, match }) => {
                 ></Form.Control>
               </Form.Group>
               <FormGroup>
-                <Form.Label>Is Admin</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={isAdmin || ""}
+                <Form.Check
+                  label="Is Admin"
+                  type="checkbox"
+                  checked={isAdmin}
                   onChange={(e) => {
-                    setIsAdmin(e.target.value);
-                    console.log(isAdmin)
+                    setIsAdmin(e.target.checked);
+                    console.log(isAdmin);
                   }}
                 >
-                  <option disabled value="" >
+                  {/* <option disabled value="" >
                       Select
                     </option>
                   <option value={false}>User</option>
-                  <option value={true}>Admin</option>
-                </Form.Control>
+                  <option value={true}>Admin</option> */}
+                </Form.Check>
               </FormGroup>
               {changePassword && userData.isAdmin !== user.isAdmin && (
                 <>

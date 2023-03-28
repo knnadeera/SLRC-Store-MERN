@@ -149,7 +149,6 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 };
 
 export const getUserDetailsById = (id) => async (dispatch, getState) => {
-  console.log('a',id)
   try {
     dispatch({
       type: USER_DETAILS_BY_ID_REQUEST,
@@ -167,7 +166,7 @@ export const getUserDetailsById = (id) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(`/api/users/${id}`, config);
-    
+
     dispatch({
       type: USER_DETAILS_BY_ID_SUCCESS,
       payload: data,
@@ -184,7 +183,7 @@ export const getUserDetailsById = (id) => async (dispatch, getState) => {
 };
 
 export const updateUserProfile = (user) => async (dispatch, getState) => {
-  console.log('u',user)
+  console.log("u", user);
   try {
     dispatch({
       type: USER_UPDATE_PROFILE_REQUEST,
@@ -239,8 +238,13 @@ export const updateUserByAdmin = (user) => async (dispatch, getState) => {
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
+    });
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
       payload: data,
     });
+    
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
